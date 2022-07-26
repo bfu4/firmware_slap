@@ -1,3 +1,32 @@
 #!/bin/bash
 
-docker run --rm -it -w /slap/bin docker-firmware-slap "$@"
+FIRMWARE_SLAP_PYTHON="./bin/Vuln_Discover_Celery.py"
+DOCKER_WORKSPACE="/slap"
+DOCKER_IMAGE="docker-firmware-slap"
+DOCKER_COMMAND="docker run --rm -it -w ${DOCKER_WORKSPACE}"
+COMMAND="python3 ${FIRMWARE_SLAP_PYTHON}"
+
+function print_usage() {
+   printf "\n\033[1;31m[!]\033[0m usage: ./slap ['image' | FILE]\n\n\timage: opens docker image\n\tFILE: file to analyze\n"
+}
+
+if [[ "$#" -lt 1 ]]; then
+   print_usage
+   exit 1
+fi
+
+if [[ "$1" == "image" ]]; then
+   bash -c "${DOCKER_COMMAND} ${DOCKER_IMAGE} /bin/bash"
+   exit 0
+fi
+
+FIRMWARE_FILE="$1"
+FIRMWARE_FILENAME=$(basename "$FIRMWARE_FILE")
+
+function build_command() {
+    echo "${COMMAND} /mount/${FIRMWARE_FILENAME}"
+}
+
+
+FULL_CMD=$(build_command "$FIRMWARE_FILE")
+echo "${DOCKER_COMMAND} -v ${FIRMWARE_FILE}:/mount/${FIRMWARE_FILENAME} ${DOCKER_IMAGE} ${FULL_CMD}"
