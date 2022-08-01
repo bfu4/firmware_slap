@@ -1,4 +1,4 @@
-FROM amd64/ubuntu:20.04
+FROM ubuntu:20.04
 
 COPY dependencies /dependencies
 
@@ -23,7 +23,7 @@ RUN apt install --yes docker-ce docker-ce-cli containerd.io docker-compose-plugi
 RUN service rabbitmq-server start
 
 WORKDIR /
-RUN git clone https://github.com/ChrisTheCoolHut/Firmware_Slap /slap
+RUN git clone https://github.com/bfu4/firmware_slap /slap
 RUN bash -c "wget https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.1.4_build/ghidra_10.1.4_PUBLIC_20220519.zip"
 RUN bash -c "unzip ghidra_10.1.4_PUBLIC_20220519.zip -d ghidra"
 RUN echo "export PATH=\$PATH:/ghidra/ghidra_10.1.4/support" >> ~/.bashrc
@@ -40,5 +40,10 @@ RUN bash -c "python3 setup.py install"
 
 RUN mkdir /mount
 
-WORKDIR /slap
+WORKDIR /slap/bin
+RUN chmod +x $(/bin/ls | tr -d "\t" | tr "\n" " ")
+RUN ln -s $(which python3) /usr/bin/python
+
 RUN echo "source /slap/bin/activate" >> ~/.bashrc
+
+WORKDIR /slap

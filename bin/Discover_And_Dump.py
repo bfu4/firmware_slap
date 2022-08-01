@@ -4,7 +4,7 @@ from celery import Celery
 from firmware_slap.function_analyzer import *
 from firmware_slap.celery_tasks import *
 from firmware_slap import firmware_clustering as fhc
-from firmware_slap import es_helper as eh
+# from firmware_slap import es_helper as eh
 from firmware_slap.function_handler import print_function
 from termcolor import colored
 import hashlib
@@ -73,11 +73,11 @@ def main():
     global use_elastic
     global es
     use_elastic = args.elastic
-    es = eh.get_es()
+    # es = eh.get_es()
 
-    if use_elastic:
-        eh.build_index(es, eh.vulnerability_index, args.delete_index)
-        eh.build_index(es, eh.function_index, args.delete_index)
+    # if use_elastic:
+    #    eh.build_index(es, eh.vulnerability_index, args.delete_index)
+    #    eh.build_index(es, eh.function_index, args.delete_index)
 
     function_timeout = args.function_timeout
 
@@ -168,10 +168,10 @@ def fix_functions(all_arg_funcs):
 
         func['func_hash'] = func_hash
 
-        if use_elastic:
-            res = eh.search_index_hash(es, eh.function_index, func_hash)
-            if res and res['hits']['hits']:
-                exclude_list.append(func)
+        # if use_elastic:
+        #    res = eh.search_index_hash(es, eh.function_index, func_hash)
+        #    if res and res['hits']['hits']:
+        #        exclude_list.append(func)
 
     for func in exclude_list:
         all_arg_funcs.remove(func)
@@ -265,9 +265,9 @@ def check_bugs(arg_funcs):
 
             # Can't serialize a task
             task = func.pop('task')
-            if use_elastic:
-                small_func = get_small_function(func)
-                eh.import_item(es, eh.function_index, small_func)
+            # if use_elastic:
+            #    small_func = get_small_function(func)
+            #    eh.import_item(es, eh.function_index, small_func)
 
             if failed:
                 func['result'] = None
