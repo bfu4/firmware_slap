@@ -25,8 +25,8 @@ RUN service rabbitmq-server start
 WORKDIR /
 RUN git clone https://github.com/bfu4/firmware_slap /slap
 RUN bash -c "wget https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.1.4_build/ghidra_10.1.4_PUBLIC_20220519.zip"
-RUN bash -c "unzip ghidra_10.1.4_PUBLIC_20220519.zip -d ghidra"
-RUN echo "export PATH=\$PATH:/ghidra/ghidra_10.1.4/support" >> ~/.bashrc
+RUN bash -c "unzip ghidra_10.1.4_PUBLIC_20220519.zip -d /ghidra"
+ENV PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/ghidra/ghidra_10.1.4_PUBLIC/support
 
 WORKDIR /slap
 RUN pip3 install -r requirements

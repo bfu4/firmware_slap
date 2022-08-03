@@ -120,8 +120,8 @@ def fix_functions(all_arg_funcs):
 
         # if use_elastic:
         #    res = eh.search_index_hash(es, eh.function_index, func_hash)
-            if res and res['hits']['hits']:
-                exclude_list.append(func)
+        if res and res['hits']['hits']:
+            exclude_list.append(func)
 
     for func in exclude_list:
         all_arg_funcs.remove(func)
